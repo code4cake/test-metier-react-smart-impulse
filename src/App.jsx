@@ -1,8 +1,6 @@
-// import React from "react";
-
-import logo from "./logo.svg";
-import "./App.css";
-import { Component } from "react";
+import logo from './logo.svg';
+import './App.css';
+import { Component } from 'react';
 
 class App extends Component {
   constructor(props) {
@@ -14,7 +12,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch("/api/projects")
+    fetch('/api/projects')
       .then((res) => res.json())
       .then((result) => {
         this.setState({
@@ -37,8 +35,8 @@ class App extends Component {
   render() {
     const { projects, data } = this.state;
 
-    console.log("projects", projects);
-    console.log("data", data);
+    console.log('projects', projects);
+    console.log('data', data);
 
     const projectItems = projects.map((project) => (
       <li key={project.name}>{project.name}</li>
@@ -47,7 +45,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <p>Project list:</p>
+          <h1 className="text-3xl">Project list:</h1>
           <ul>{projectItems}</ul>
           <p>Data size: {data.length}</p>
         </header>
