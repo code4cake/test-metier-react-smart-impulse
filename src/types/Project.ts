@@ -4,8 +4,8 @@ export interface Project {
   timezone: string;
 }
 
-interface EnergyDataPoint {
-  timestamp: string;
+export interface EnergyDataPoint {
+  timestamp: number;
   value: number;
 }
 

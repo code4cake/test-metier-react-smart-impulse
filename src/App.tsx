@@ -1,7 +1,3 @@
-// import { useState, useEffect } from 'react';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
 import {
   Card,
   CardContent,
@@ -17,14 +13,18 @@ import type { Project } from '@/types/Project';
 
 const App = () => {
   const { isPending, isError, data: projects, error } = useProjects();
-  const { data: projectEnergyData } = useEnergyData(projects[0]?.uuid);
 
-  const queryClient = new QueryClient();
+  const projectUuid = projects?.[0]?.uuid;
+  const {
+    data: projectEnergyData,
+    // isLoading: energyDataLoading,
+    // isError: energyDataError,
+  } = useEnergyData(projectUuid);
 
   console.log('projects', projects);
   console.log('projectEnergyData', projectEnergyData);
 
-  const projectItems = projects.map((project: Project) => (
+  const projectItems = projects?.map((project: Project) => (
     <Card className="dark" key={project.uuid}>
       <CardHeader>
         <CardTitle>{project.name}</CardTitle>
@@ -41,22 +41,18 @@ const App = () => {
   ));
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <main className="dark grid justify-center gap-2 pt-3 text-center text-2xl">
       {isError && <p>Error: {error.message}</p>}
       {isPending && <p>Loading...</p>}
-
-      <main className="dark grid justify-center gap-2 pt-3 text-center text-2xl">
-        <img
-          src={logo}
-          className="motion-safe:animate-spin-slow h-28 w-28 justify-self-center"
-          alt="logo"
-        />
-        <h1 className="text-3xl">Project list:</h1>
-        <ul className="grid gap-2">{projectItems}</ul>
-        <p>Data size: {projectEnergyData.length}</p>
-      </main>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+      <img
+        src={logo}
+        className="motion-safe:animate-spin-slow h-28 w-28 justify-self-center"
+        alt="logo"
+      />
+      <h1 className="text-3xl">Project list:</h1>
+      <ul className="grid gap-2">{projectItems}</ul>
+      <p>Data size: {projectEnergyData?.length}</p>
+    </main>
   );
 };
 

@@ -1,11 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 
-const getProjects = async () => {
+import { Project } from '@/types/Project';
+
+const getProjects = async (): Promise<Project[]> => {
   const res = await fetch('/api/projects');
   return res.json();
 };
 
-const getEnergyData = async (uuid: string) => {
+const getEnergyData = async (uuid?: string) => {
   const res = await fetch(`/api/energy?uuid=${uuid}`);
   return res.json();
 };
@@ -13,12 +15,12 @@ const getEnergyData = async (uuid: string) => {
 export const useProjects = () => {
   return useQuery({
     queryKey: ['projects'],
-    queryFn: getProjects,
+    queryFn: () => getProjects(),
     // placeholderData??
   });
 };
 
-export const useEnergyData = (uuid: string) => {
+export const useEnergyData = (uuid?: string) => {
   return useQuery({
     queryKey: ['energy', uuid],
     queryFn: () => getEnergyData(uuid),
