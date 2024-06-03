@@ -1,7 +1,6 @@
 import { Bar } from 'react-chartjs-2';
 import {
   type ChartData,
-  type ChartOptions,
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
@@ -10,8 +9,11 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import 'chartjs-adapter-date-fns';
+import { format } from 'date-fns';
 
 import type { ProjectEnergyData } from '@/types/Project';
+import { createChartOptions } from './createChartOptions';
 
 interface EnergyBarChartProps {
   energyData: ProjectEnergyData[];
@@ -35,10 +37,10 @@ export const EnergyBarChart = ({ energyData }: EnergyBarChartProps) => {
     ),
   ).sort();
 
-  // Map timestamps to date labels
   const labels = uniqueTimestamps.map((timestamp) => {
     console.log('timestamp', timestamp);
-    return new Date(timestamp).toLocaleDateString();
+    // return new Date(timestamp).toLocaleDateString();
+    return format(new Date(timestamp), 'EEE, MMM d, HH:mm');
   });
 
   const datasets = energyData.map((dataset) => ({
@@ -57,29 +59,13 @@ export const EnergyBarChart = ({ energyData }: EnergyBarChartProps) => {
     datasets,
   };
 
-  const options: ChartOptions<'bar'> = {
-    plugins: {
-      title: {
-        display: true,
-        text: 'Energy Data',
-      },
-      legend: {
-        display: true,
-        position: 'top',
-      },
-    },
-    responsive: true,
-    scales: {
-      x: {
-        stacked: true,
-      },
-      y: {
-        stacked: true,
-      },
-    },
-  };
+  const options = createChartOptions();
 
-  return <Bar data={data} options={options} />;
+  return (
+    <div style={{ minHeight: '500px', overflowX: 'auto' }}>
+      <Bar data={data} options={options} />
+    </div>
+  );
 };
 
 export default EnergyBarChart;
