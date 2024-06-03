@@ -1,65 +1,85 @@
-// import { Bar } from 'react-chartjs-2';
-// import { ChartData, ChartOptions } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+import {
+  type ChartData,
+  type ChartOptions,
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 
-// import type { ProjectEnergyData, EnergyDataPoint } from '@/types/Project';
+import type { ProjectEnergyData } from '@/types/Project';
 
-// interface EnergyBarChartProps {
-//   energyData: ProjectEnergyData[];
-// }
+interface EnergyBarChartProps {
+  energyData: ProjectEnergyData[];
+}
 
-// export const EnergyBarChart = ({ energyData }: EnergyBarChartProps) => {
-//   const uniqueTimestamps = Array.from(
-//     new Set(
-//       energyData.flatMap((dataset) => dataset.data.map((point) => point[0])),
-//     ),
-//   ).sort();
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 
-//   // Map timestamps to date labels
-//   const labels = uniqueTimestamps.map((timestamp) =>
-//     new Date(timestamp).toLocaleDateString(),
-//   );
+export const EnergyBarChart = ({ energyData }: EnergyBarChartProps) => {
+  const uniqueTimestamps = Array.from(
+    new Set(
+      energyData.flatMap((dataset) =>
+        dataset.data.map((point) => point.timestamp),
+      ),
+    ),
+  ).sort();
 
-//   const datasets = energyData.map((dataset: any) => ({
-//     label: dataset.label,
-//     data: uniqueTimestamps.map((timestamp) => {
-//       const dataPoint = dataset.data.find(
-//         (point: any) => point[0] === timestamp,
-//       );
-//       return dataPoint ? dataPoint[1] : 0; // Return the value or 0 if no data point for the timestamp
-//     }),
-//     backgroundColor: dataset.color,
-//   }));
+  // Map timestamps to date labels
+  const labels = uniqueTimestamps.map((timestamp) => {
+    console.log('timestamp', timestamp);
+    return new Date(timestamp).toLocaleDateString();
+  });
 
-//   const data: ChartData<'bar'> = {
-//     labels,
-//     datasets,
-//   };
+  const datasets = energyData.map((dataset) => ({
+    label: dataset.label,
+    data: uniqueTimestamps.map((timestamp) => {
+      const dataPoint = dataset.data.find(
+        (point) => point.timestamp === timestamp,
+      );
+      return dataPoint ? dataPoint.value : 0;
+    }),
+    backgroundColor: dataset.color,
+  }));
 
-//   const options: ChartOptions<'bar'> = {
-//     plugins: {
-//       title: {
-//         display: true,
-//         text: 'Energy Data',
-//       },
-//       legend: {
-//         display: true,
-//         position: 'top',
-//       },
-//     },
-//     responsive: true,
-//     scales: {
-//       x: {
-//         stacked: true,
-//       },
-//       y: {
-//         stacked: true,
-//       },
-//     },
-//   };
+  const data: ChartData<'bar'> = {
+    labels,
+    datasets,
+  };
 
-//   return <Bar data={data} options={options} />;
-// };
+  const options: ChartOptions<'bar'> = {
+    plugins: {
+      title: {
+        display: true,
+        text: 'Energy Data',
+      },
+      legend: {
+        display: true,
+        position: 'top',
+      },
+    },
+    responsive: true,
+    scales: {
+      x: {
+        stacked: true,
+      },
+      y: {
+        stacked: true,
+      },
+    },
+  };
 
-// export default EnergyBarChart;
+  return <Bar data={data} options={options} />;
+};
 
-export const NOPE = 'NOPE';
+export default EnergyBarChart;
