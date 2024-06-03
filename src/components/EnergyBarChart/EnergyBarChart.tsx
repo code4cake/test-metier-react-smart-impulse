@@ -39,7 +39,7 @@ export const EnergyBarChart = ({ energyData }: EnergyBarChartProps) => {
 
   const labels = uniqueTimestamps.map((timestamp) => {
     console.log('timestamp', timestamp);
-    // return new Date(timestamp).toLocaleDateString();
+
     return format(new Date(timestamp), 'EEE, MMM d, HH:mm');
   });
 
@@ -62,7 +62,7 @@ export const EnergyBarChart = ({ energyData }: EnergyBarChartProps) => {
   const options = createChartOptions();
 
   return (
-    <div style={{ minHeight: '500px', overflowX: 'auto' }}>
+    <div style={{ minHeight: '500px' }}>
       <Bar data={data} options={options} />
     </div>
   );

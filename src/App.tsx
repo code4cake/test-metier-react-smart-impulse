@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { EnergyBarChart } from '@/components/EnergyBarChart/EnergyBarChart';
 import { useProjects, useEnergyData } from '@/api/useProjects';
-import type { ProjectEnergyData, Project } from '@/types/Project';
+import type { Project } from '@/types/Project';
 import { Card } from '@/components/ui/card';
 import {
   Select,
@@ -11,6 +11,7 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select';
+import { convertRawData } from '@/utils/convertRawData';
 
 const App = () => {
   const [selectedProject, setSelectedProject] = useState<
@@ -31,18 +32,6 @@ const App = () => {
     isError: energyDataError,
   } = useEnergyData(selectedProject ?? projectUuid);
 
-  const convertRawData = (data: any[]): ProjectEnergyData[] => {
-    return data.map((item) => ({
-      label: item.label,
-      type: item.type,
-      color: item.color,
-      data: item.data.map(([timestamp, value]: [number, number]) => ({
-        timestamp,
-        value,
-      })),
-    }));
-  };
-
   const projectEnergyData = rawEnergyData ? convertRawData(rawEnergyData) : [];
 
   console.log('projects', projects);
@@ -53,7 +42,7 @@ const App = () => {
       {projectsIsError && <p>Error: {error.message}</p>}
       {projectsArePending && <p>Loading...</p>}
 
-      <h1 className="text-3xl uppercase">Your Footprint</h1>
+      <h1 className="text-4xl">Your footprint</h1>
 
       <section className="grid gap-4 py-2">
         <Select
@@ -61,7 +50,7 @@ const App = () => {
           onValueChange={(value) => setSelectedProject(value)}
         >
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Choose Project" />
+            <SelectValue placeholder={selectedProject ?? 'Choose a project'} />
           </SelectTrigger>
           <SelectContent>
             {projects?.map((project) => (

@@ -30,13 +30,13 @@ export function createChartOptions(): ChartOptions<'bar'> {
       x: {
         stacked: true,
         // type: 'time',
-        time: {
-          unit: 'day',
-          tooltipFormat: 'PPPPp',
-          displayFormats: {
-            day: 'EEE, MMM d',
-          },
-        },
+        // time: {
+        //   unit: 'day',
+        //   tooltipFormat: 'PPPPp',
+        //   displayFormats: {
+        //     day: 'EEE, MMM d',
+        //   },
+        // },
         title: {
           display: true,
           text: 'Date',
@@ -57,6 +57,10 @@ export function createChartOptions(): ChartOptions<'bar'> {
         title: {
           display: true,
           text: 'Energy (kWh/MWh)',
+          font: {
+            size: 14,
+            family: 'Fira Sans Extra Condensed',
+          },
         },
         ticks: {
           font: {
