@@ -1,15 +1,17 @@
 import { useState } from 'react';
 
+import { EnergyEducation } from '@/components/EnergyEducation/EnergyEducation';
 import { EnergyBarChart } from '@/components/EnergyBarChart/EnergyBarChart';
+import { EnergyCard } from '@/components/EnergyCard/EnergyCard';
 import { useProjects, useEnergyData } from '@/api/useProjects';
 import type { Project } from '@/types/Project';
 import { Card } from '@/components/ui/card';
 import {
   Select,
-  SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
 } from '@/components/ui/select';
 import { convertRawData } from '@/utils/convertRawData';
 
@@ -53,7 +55,7 @@ const App = () => {
             <SelectValue placeholder={selectedProject ?? 'Choose a project'} />
           </SelectTrigger>
           <SelectContent>
-            {projects?.map((project) => (
+            {projects?.map((project: Project) => (
               <SelectItem key={project.uuid} value={project.uuid}>
                 {project.name}
               </SelectItem>
@@ -70,6 +72,50 @@ const App = () => {
               <EnergyBarChart energyData={projectEnergyData} />
             </Card>
           )}
+        </article>
+      </section>
+
+      <section className="grid gap-4 md:flex">
+        <article className="grid gap-4 pb-6">
+          <EnergyCard
+            title="Energy consumption total"
+            iconName="electricity"
+            energyTotal="35 kWh"
+            energyPercentageValue="+19% up"
+            energyPercentageLabel="from last week"
+          />
+          <EnergyCard
+            title="Gas comsumption total"
+            iconName="gas"
+            energyTotal="19 kWh"
+            energyPercentageValue="-5% down"
+            energyPercentageLabel="from last week"
+          />
+        </article>
+
+        <article className="grid gap-3 border-t border-slate-200 pt-4">
+          <h1 className="text-4xl leading-tight">Lower your emissions</h1>
+          <ul className="grid gap-3">
+            <EnergyEducation
+              number="01"
+              text="Invest in renewable energy source of electricity"
+              onClick={() => console.log('Invest in renewable energy source')}
+            />
+            <EnergyEducation
+              number="02"
+              text="Increase the usage of renewable energy sources on this projects"
+              onClick={() =>
+                console.log('Increase the usage of renewable energy sources')
+              }
+            />
+            <EnergyEducation
+              number="03"
+              text="Cut consumption of the on this hours of the day"
+              onClick={() =>
+                console.log('Cut consumption of the on this hours')
+              }
+            />
+          </ul>
         </article>
       </section>
     </main>

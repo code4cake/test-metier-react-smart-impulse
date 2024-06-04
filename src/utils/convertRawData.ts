@@ -4,7 +4,7 @@ interface RawEnergyData {
   label: ProjectEnergyData['label'];
   type: ProjectEnergyData['type'];
   color: ProjectEnergyData['color'];
-  data: [number, number][]; // [timestamp, value]
+  data: [number, number][]; //  converted to [timestamp, value] for the ProjectEnergyData type
 }
 
 export const convertRawData = (data: RawEnergyData[]): ProjectEnergyData[] => {
