@@ -29,7 +29,7 @@ ChartJS.register(
 );
 
 export const BarChartDetailed = ({ energyData }: BarChartDetailed) => {
-  console.log('energyData detailed', energyData);
+  // console.log('energyData detailed', energyData);
 
   const uniqueTimestamps = Array.from(
     new Set(

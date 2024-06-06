@@ -16,3 +16,12 @@ export interface ProjectEnergyData {
   type: string;
   color: string;
 }
+
+export interface ProjectEnergyDataByYear
+  extends Omit<ProjectEnergyData, 'data'> {
+  data: {
+    year: number;
+    month: number;
+    values: number[];
+  }[];
+}
