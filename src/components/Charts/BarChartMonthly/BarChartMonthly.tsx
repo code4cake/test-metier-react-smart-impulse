@@ -1,126 +1,34 @@
-// import { Bar } from 'react-chartjs-2';
-// import {
-//   type ChartData,
-//   Chart as ChartJS,
-//   CategoryScale,
-//   LinearScale,
-//   BarElement,
-//   Title,
-//   Tooltip,
-//   Legend,
-// } from 'chart.js';
-// import type { ProjectEnergyData } from '@/types/Project';
-// import { createChartOptions } from '@/components/Charts/utils/createChartOptions';
-
-// interface BarChartMonthlyProps {
-//   energyData: ProjectEnergyData[];
-// }
-
-// type AggregatedDataByMonth = Record<number, Record<number, number>>;
-
-// ChartJS.register(
-//   CategoryScale,
-//   LinearScale,
-//   BarElement,
-//   Title,
-//   Tooltip,
-//   Legend,
-// );
-
-// const monthNames = [
-//   'January',
-//   'February',
-//   'March',
-//   'April',
-//   'May',
-//   'June',
-//   'July',
-//   'August',
-//   'September',
-//   'October',
-//   'November',
-//   'December',
-// ];
-
-// export const BarChartMonthly = ({ energyData }: BarChartMonthlyProps) => {
-//   console.log('energyData monthly ', energyData);
-
-//   const aggregatedDataByMonth: AggregatedDataByMonth = {};
-//   for (const dataset of energyData) {
-//     for (const dataPoint of dataset.data) {
-//       const date = new Date(dataPoint.timestamp);
-
-//       // console.log('date timestamo', date);
-
-//       const month = date.getMonth(); // Get the month index (0-11)
-//       const year = date.getFullYear();
-
-//       if (!aggregatedDataByMonth[year]) {
-//         aggregatedDataByMonth[year] = {};
-//       }
-//       if (!aggregatedDataByMonth[year][month]) {
-//         aggregatedDataByMonth[year][month] = 0;
-//       }
-
-//       aggregatedDataByMonth[year][month] += dataPoint.value;
-//     }
-//     // console.log('aggregatedDataByMonth', aggregatedDataByMonth);
-//   }
-
-//   const labels = monthNames;
-
-//   const datasets = energyData.map((dataset) => {
-//     console.log('dataset', dataset);
-
-//     const data = [];
-
-//     const currentYear = new Date().getFullYear();
-//     console.log('currentYear', currentYear);
-
-//     for (let month = 0; month < 12; month++) {
-//       const yearData = aggregatedDataByMonth[currentYear];
-//       console.log('yearData', yearData);
-
-//       const value = yearData ? yearData[month] || 0 : 0; // If no data for the month, set value to 0
-//       data.push(value);
-//     }
-
-//     // console.log('data', data);
-//     return {
-//       label: dataset.label,
-//       data,
-//       backgroundColor: dataset.color,
-//     };
-//   });
-
-//   const data: ChartData<'bar'> = {
-//     labels,
-//     datasets,
-//   };
-
-//   const options = createChartOptions();
-
-//   return (
-//     <div style={{ minHeight: '500px' }}>
-//       <Bar data={data} options={options} />
-//     </div>
-//   );
-// };
-
 import { useState } from 'react';
+
+import { Bar } from 'react-chartjs-2';
+import {
+  // type ChartData,
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 import type {
   ProjectEnergyData,
   ProjectEnergyDataByYear,
 } from '@/types/Project';
+// import { createChartOptions } from '../utils/createChartOptions';
 
 interface BarChartMonthlyProps {
   energyData: ProjectEnergyData[];
-}
-
-interface EnergyDataMonth {
-  month: number;
-  values: number[];
 }
 
 export interface EnergyDataPoint {
@@ -129,36 +37,23 @@ export interface EnergyDataPoint {
   values: number[];
 }
 
-type EnergyDataByYearAndMonth = Record<string, EnergyDataMonth[]>;
-
-interface YearSelectProps {
-  years: number[];
-  onSelect: (year: number) => void;
-}
-
-function YearSelect({ years, onSelect }: YearSelectProps) {
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    onSelect(parseInt(event.target.value, 10));
-  };
-  return (
-    <select onChange={handleChange}>
-      {years.map((year) => (
-        <option key={year} value={year}>
-          {year}
-        </option>
-      ))}
-    </select>
-  );
-}
-
 export function BarChartMonthly({ energyData }: BarChartMonthlyProps) {
-  const [_selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
 
-  const energyDataByYearAndMonth: EnergyDataByYearAndMonth = {};
+  // useEffect(() => {
+  //   // Set the initial selected year to the first year available in the dataset
+  //   if (energyData.length > 0) {
+  //     const firstYear = Math.min(
+  //       ...energyData.flatMap((dataset) => dataset.data.map((dp) => dp.year)),
+  //     );
+  //     setSelectedYear(firstYear);
+  //   }
+  // }, [energyData]);
 
-  const transformedData: ProjectEnergyDataByYear[] = [];
+  // const energyDataByYearAndMonth: EnergyDataByYearAndMonth = {};
 
-  // Iterate over each dataset
+  const energyDataByYear: ProjectEnergyDataByYear[] = [];
+
   energyData.forEach((dataset) => {
     const transformedDataPoints: EnergyDataPoint[] = [];
 
@@ -182,32 +77,111 @@ export function BarChartMonthly({ energyData }: BarChartMonthlyProps) {
       }
     });
 
-    transformedData.push({
+    energyDataByYear.push({
       label: dataset.label,
       type: dataset.type,
       color: dataset.color,
       data: transformedDataPoints,
     });
 
-    return transformedData;
+    return energyDataByYear;
   });
 
-  console.log(transformedData, 'transformedData');
+  console.log(energyDataByYear, 'energyDataByYear');
 
   // console.log(energyDataByYearAndMonth);
 
   // console.log(energyDataByYearAndMonth, 'energyDataByYearAndMonth');
 
-  const years = Object.keys(energyDataByYearAndMonth).map(Number);
-  // console.log('years', years);
+  const years = [
+    ...new Set(
+      energyDataByYear.flatMap((data) => data.data.map((dp) => dp.year)),
+    ),
+  ];
 
   const handleYearSelect = (year: number) => {
     setSelectedYear(year);
   };
 
+  // const options = createChartOptions();
   return (
     <div>
-      <YearSelect years={years} onSelect={handleYearSelect} />
+      <select
+        value={selectedYear ?? ''}
+        onChange={(e) => handleYearSelect(parseInt(e.target.value, 10))}
+      >
+        <option value="">Select Year</option>
+        {years.map((year) => (
+          <option key={year} value={year}>
+            {year}
+          </option>
+        ))}
+      </select>
+
+      <div style={{ minHeight: '500px' }}>
+        <Bar
+          data={getChartData(energyDataByYear, selectedYear)}
+          options={{
+            scales: {
+              x: { stacked: true },
+              y: {
+                stacked: true,
+                ticks: {
+                  callback: (value) => `${value} MkWh`,
+                },
+              },
+            },
+            plugins: {
+              legend: { position: 'top' },
+              title: {
+                display: true,
+                text: 'Monthly Energy Consumption',
+              },
+            },
+          }}
+          // options={options}
+        />
+      </div>
     </div>
   );
+}
+
+function getChartData(
+  energyDataByYear: ProjectEnergyDataByYear[],
+  selectedYear: number | null,
+) {
+  // if (!selectedYear) return {};
+
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  const selectedYearData = energyDataByYear.map((dataset) => {
+    console.log(dataset, 'dataset');
+
+    const dataForYear = dataset.data.find((dp) => dp.year === selectedYear);
+    const values = dataForYear ? dataForYear.values : Array(12).fill(0);
+
+    return {
+      label: dataset.label,
+      data: values,
+      backgroundColor: dataset.color,
+    };
+  });
+
+  return {
+    labels: monthNames,
+    datasets: selectedYearData,
+  };
 }
