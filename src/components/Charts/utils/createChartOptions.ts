@@ -56,7 +56,7 @@ export function createChartOptions(): ChartOptions<'bar'> {
         stacked: true,
         title: {
           display: true,
-          text: 'Energy (kWh/MWh)',
+          text: 'Energy (kWh/MkWh)',
           font: {
             size: 14,
             family: 'Fira Sans Extra Condensed',
