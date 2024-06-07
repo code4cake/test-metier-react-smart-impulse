@@ -39,10 +39,10 @@ export function EnergyCard({
       <CardContent className="flex place-content-around items-center">
         <p className="text-3xl">{energyTotal}</p>
         <CardDescription className="grid">
-          <p className={renderCorrectLabelColor(energyPercentageValue)}>
+          <span className={renderCorrectLabelColor(energyPercentageValue)}>
             {energyPercentageValue}
-          </p>
-          <p className="">{energyPercentageLabel}</p>
+          </span>
+          <span className="">{energyPercentageLabel}</span>
         </CardDescription>
       </CardContent>
     </Card>

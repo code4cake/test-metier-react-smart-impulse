@@ -1,22 +1,21 @@
-import { useState } from 'react';
-
 import { EnergyEducation } from '@/components/EnergyEducation/EnergyEducation';
 import { BarChartDetailed } from '@/components/Charts/BarChartDetailed/BarChartDetailed';
 import { BarChartMonthly } from '@/components/Charts/BarChartMonthly/BarChartMonthly';
 import { EnergyCard } from '@/components/EnergyCard/EnergyCard';
 import { ProjectSelect } from '@/components/Projects/ProjectSelect';
 import { SkeletonCard } from '@/components/Skeletons/SkeletonCard';
+import { SkeletonSelect } from '@/components/Skeletons/SkeletonSelect';
+import {
+  useSelectedProject,
+  useSetSelectedProject,
+} from '@/context/ProjectContext';
 import { useProjects, useEnergyData } from '@/api/useProjects';
-import type { Project } from '@/types/Project';
 import { Card } from '@/components/ui/card';
 import { createTimestampValueSet } from '@/utils/createTimestampValueSet';
 
-import { SkeletonSelect } from './components/Skeletons/SkeletonSelect';
-
 const App = () => {
-  const [selectedProject, setSelectedProject] = useState<
-    Project['uuid'] | null
-  >(null);
+  const selectedProjectFromCtx = useSelectedProject();
+  const setSelectedProjectInCtx = useSetSelectedProject();
 
   const {
     isPending: projectsArePending,
@@ -31,7 +30,7 @@ const App = () => {
     data: rawEnergyData,
     isLoading: energyDataLoading,
     isError: energyDataError,
-  } = useEnergyData(selectedProject ?? projectUuid);
+  } = useEnergyData(selectedProjectFromCtx ?? projectUuid);
 
   const projectEnergyData = rawEnergyData
     ? createTimestampValueSet(rawEnergyData)
@@ -48,10 +47,10 @@ const App = () => {
           <SkeletonSelect />
         ) : (
           <ProjectSelect
-            value={selectedProject ?? ''}
-            onValueChange={(value) => setSelectedProject(value)}
+            value={selectedProjectFromCtx ?? ''}
+            onValueChange={(value) => setSelectedProjectInCtx(value)}
             projects={projects}
-            placeholder={selectedProject ?? 'Choose a project'}
+            placeholder={selectedProjectFromCtx ?? 'Choose a project'}
           />
         )}
 

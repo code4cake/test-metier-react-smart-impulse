@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './globals.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ProjectContextProvider } from './context/ProjectContext';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -15,7 +16,10 @@ const queryClient = new QueryClient();
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <ProjectContextProvider>
+        <App />
+      </ProjectContextProvider>
+
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </React.StrictMode>,

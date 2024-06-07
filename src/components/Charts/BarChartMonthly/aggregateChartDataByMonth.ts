@@ -23,8 +23,6 @@ export function aggregateChartDataByMonth(
     'December',
   ];
 
-  console.log(energyDataByYear, 'energyDataByYear');
-
   const datasets: any[] = [];
 
   energyDataByYear.forEach((category) => {
