@@ -14,7 +14,6 @@ export const useProjects = () => {
   return useQuery({
     queryKey: ['projects'],
     queryFn: () => getProjects(),
-    // placeholderData??
   });
 };
 
@@ -23,7 +22,5 @@ export const useEnergyData = (uuid: string | null) => {
     queryKey: ['energy', uuid],
     queryFn: () => getEnergyData(uuid),
     enabled: !!uuid,
-    // placeholderData??
-    // initialData??
   });
 };
