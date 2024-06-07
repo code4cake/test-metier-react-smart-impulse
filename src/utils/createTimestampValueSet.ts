@@ -7,7 +7,9 @@ interface RawEnergyData {
   data: [number, number][]; //  converted to [timestamp, value] for the ProjectEnergyData type
 }
 
-export const convertRawData = (data: RawEnergyData[]): ProjectEnergyData[] => {
+export const createTimestampValueSet = (
+  data: RawEnergyData[],
+): ProjectEnergyData[] => {
   return data.map((item) => ({
     label: item.label,
     type: item.type,

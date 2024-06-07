@@ -13,9 +13,9 @@ import 'chartjs-adapter-date-fns';
 import { format } from 'date-fns';
 
 import type { ProjectEnergyData } from '@/types/Project';
-import { createChartOptions } from './createChartOptions';
+import { createChartOptions } from '@/components/Charts/utils/createChartOptions';
 
-interface EnergyBarChartProps {
+interface BarChartDetailed {
   energyData: ProjectEnergyData[];
 }
 
@@ -28,7 +28,9 @@ ChartJS.register(
   Legend,
 );
 
-export const EnergyBarChart = ({ energyData }: EnergyBarChartProps) => {
+export const BarChartDetailed = ({ energyData }: BarChartDetailed) => {
+  // console.log('energyData detailed', energyData);
+
   const uniqueTimestamps = Array.from(
     new Set(
       energyData.flatMap((dataset) =>
@@ -38,9 +40,9 @@ export const EnergyBarChart = ({ energyData }: EnergyBarChartProps) => {
   ).sort();
 
   const labels = uniqueTimestamps.map((timestamp) => {
-    console.log('timestamp', timestamp);
+    // console.log('timestamp', timestamp);
 
-    return format(new Date(timestamp), 'EEE, MMM d, HH:mm');
+    return format(new Date(timestamp), 'EEE, MMM d, yyy, HH:mm');
   });
 
   const datasets = energyData.map((dataset) => ({
@@ -67,5 +69,3 @@ export const EnergyBarChart = ({ energyData }: EnergyBarChartProps) => {
     </div>
   );
 };
-
-export default EnergyBarChart;

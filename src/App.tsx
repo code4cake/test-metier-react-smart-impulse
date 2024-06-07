@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
 import { EnergyEducation } from '@/components/EnergyEducation/EnergyEducation';
-import { EnergyBarChart } from '@/components/EnergyBarChart/EnergyBarChart';
+import { BarChartDetailed } from '@/components/Charts/BarChartDetailed/BarChartDetailed';
+import { BarChartMonthly } from '@/components/Charts/BarChartMonthly/BarChartMonthly';
 import { EnergyCard } from '@/components/EnergyCard/EnergyCard';
 import { useProjects, useEnergyData } from '@/api/useProjects';
 import type { Project } from '@/types/Project';
@@ -13,7 +14,8 @@ import {
   SelectItem,
   SelectTrigger,
 } from '@/components/ui/select';
-import { convertRawData } from '@/utils/convertRawData';
+import { createTimestampValueSet } from '@/utils/createTimestampValueSet';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 const App = () => {
   const [selectedProject, setSelectedProject] = useState<
@@ -34,14 +36,22 @@ const App = () => {
     isError: energyDataError,
   } = useEnergyData(selectedProject ?? projectUuid);
 
-  const projectEnergyData = rawEnergyData ? convertRawData(rawEnergyData) : [];
+  console.log('rawEnergyData', rawEnergyData);
 
-  console.log('projects', projects);
+  const projectEnergyData = rawEnergyData
+    ? createTimestampValueSet(rawEnergyData)
+    : [];
+
+  // console.log('projects', projects);
   console.log('projectEnergyData', projectEnergyData);
+
+  const isMobile = useIsMobile();
+  console.log('isMobile', isMobile);
 
   return (
     <main className="grid gap-2 px-3 py-10 text-2xl lg:px-10">
       {projectsIsError && <p>Error: {error.message}</p>}
+
       {projectsArePending && <p>Loading...</p>}
 
       <h1 className="text-4xl">Your footprint</h1>
@@ -69,7 +79,15 @@ const App = () => {
         <article className="">
           {projectEnergyData.length > 0 && (
             <Card className="p-4">
-              <EnergyBarChart energyData={projectEnergyData} />
+              <BarChartDetailed energyData={projectEnergyData} />
+            </Card>
+          )}
+        </article>
+
+        <article className="">
+          {projectEnergyData.length > 0 && (
+            <Card className="p-4">
+              <BarChartMonthly energyData={projectEnergyData} />
             </Card>
           )}
         </article>
