@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -11,6 +10,14 @@ import {
   Legend,
 } from 'chart.js';
 
+import type {
+  ProjectEnergyData,
+  ProjectEnergyDataByYear,
+} from '@/types/Project';
+import { YearSelect } from '@/components/Charts/componets/YearSelect';
+import { createChartOptions } from '@/components/Charts/utils/createChartOptions';
+import { aggregateChartDataByMonth } from './aggregateChartDataByMonth';
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -19,12 +26,6 @@ ChartJS.register(
   Tooltip,
   Legend,
 );
-
-import type {
-  ProjectEnergyData,
-  ProjectEnergyDataByYear,
-} from '@/types/Project';
-import { createChartOptions } from '../utils/createChartOptions';
 
 interface BarChartMonthlyProps {
   energyData: ProjectEnergyData[];
@@ -85,81 +86,23 @@ export function BarChartMonthly({ energyData }: BarChartMonthlyProps) {
   };
 
   const options = createChartOptions();
+  const chartDataByMonth = aggregateChartDataByMonth(
+    energyDataByYear,
+    selectedYear,
+  );
 
   return (
-    <div>
-      <select
-        value={selectedYear ?? ''}
-        onChange={(e) => handleYearSelect(parseInt(e.target.value, 10))}
-      >
-        <option value="">Select Year</option>
-        {years.map((year) => (
-          <option key={year} value={year}>
-            {year}
-          </option>
-        ))}
-      </select>
+    <>
+      <YearSelect
+        value={selectedYear ? selectedYear.toString() : ''}
+        onValueChange={(value: string) => handleYearSelect(parseInt(value, 10))}
+        years={years}
+        placeholder={selectedYear ? selectedYear.toString() : 'Select Year'}
+      />
 
       <div style={{ minHeight: '500px' }}>
-        <Bar
-          data={getChartData(energyDataByYear, selectedYear)}
-          options={options}
-        />
+        <Bar data={chartDataByMonth} options={options} />
       </div>
-    </div>
+    </>
   );
-}
-
-function getChartData(
-  energyDataByYear: ProjectEnergyDataByYear[],
-  selectedYear: number | null,
-) {
-  // if (!selectedYear) return {};
-
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-
-  console.log(energyDataByYear, 'energyDataByYear');
-
-  const datasets: any[] = [];
-
-  energyDataByYear.forEach((category) => {
-    const { label, color, data } = category;
-
-    const categoryValues: number[] = [];
-
-    data.forEach((dataPoint) => {
-      if (dataPoint.year === selectedYear) {
-        const monthIndex = dataPoint.month - 1;
-
-        categoryValues[monthIndex] = dataPoint.values.reduce(
-          (acc, val) => acc + val,
-          0,
-        );
-      }
-    });
-
-    datasets.push({
-      label,
-      backgroundColor: color,
-      data: categoryValues,
-    });
-  });
-
-  return {
-    labels: monthNames,
-    datasets,
-  };
 }

@@ -13,7 +13,6 @@ export function createChartOptions(): ChartOptions<'bar'> {
           size: 20,
           family: 'Fira Sans Extra Condensed',
         },
-        // color: 'hsla(20.5 90.2% 48.2%)',
       },
       legend: {
         display: true,
@@ -29,14 +28,6 @@ export function createChartOptions(): ChartOptions<'bar'> {
     scales: {
       x: {
         stacked: true,
-        // type: 'time',
-        // time: {
-        //   unit: 'day',
-        //   tooltipFormat: 'PPPPp',
-        //   displayFormats: {
-        //     day: 'EEE, MMM d',
-        //   },
-        // },
         title: {
           display: true,
           text: 'Date',

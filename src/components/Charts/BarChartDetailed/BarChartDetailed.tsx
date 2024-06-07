@@ -14,6 +14,7 @@ import { format } from 'date-fns';
 
 import type { ProjectEnergyData } from '@/types/Project';
 import { createChartOptions } from '@/components/Charts/utils/createChartOptions';
+import { aggregateChartData } from './aggregateChartData';
 
 interface BarChartDetailed {
   energyData: ProjectEnergyData[];
@@ -41,16 +42,9 @@ export const BarChartDetailed = ({ energyData }: BarChartDetailed) => {
     return format(new Date(timestamp), 'EEE, MMM d, yyy, HH:mm');
   });
 
-  const datasets = energyData.map((dataset) => ({
-    label: dataset.label,
-    data: uniqueTimestamps.map((timestamp) => {
-      const dataPoint = dataset.data.find(
-        (point) => point.timestamp === timestamp,
-      );
-      return dataPoint ? dataPoint.value : 0;
-    }),
-    backgroundColor: dataset.color,
-  }));
+  const datasets = energyData.map((dataset) =>
+    aggregateChartData({ dataset, uniqueTimestamps }),
+  );
 
   const data: ChartData<'bar'> = {
     labels,

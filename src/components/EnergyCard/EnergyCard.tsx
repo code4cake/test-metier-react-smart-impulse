@@ -8,6 +8,7 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card';
+import { renderCorrectLabelColor } from './renderCorrectLabelColor';
 
 interface EnergyCardProps {
   iconName: 'gas' | 'electricity';
@@ -38,7 +39,9 @@ export function EnergyCard({
       <CardContent className="flex place-content-around items-center">
         <p className="text-3xl">{energyTotal}</p>
         <CardDescription className="grid">
-          <p className="text-red-500">{energyPercentageValue}</p>
+          <p className={renderCorrectLabelColor(energyPercentageValue)}>
+            {energyPercentageValue}
+          </p>
           <p className="">{energyPercentageLabel}</p>
         </CardDescription>
       </CardContent>
