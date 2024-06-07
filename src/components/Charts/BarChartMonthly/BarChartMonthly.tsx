@@ -40,18 +40,6 @@ export interface EnergyDataPoint {
 export function BarChartMonthly({ energyData }: BarChartMonthlyProps) {
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
 
-  // useEffect(() => {
-  //   // Set the initial selected year to the first year available in the dataset
-  //   if (energyData.length > 0) {
-  //     const firstYear = Math.min(
-  //       ...energyData.flatMap((dataset) => dataset.data.map((dp) => dp.year)),
-  //     );
-  //     setSelectedYear(firstYear);
-  //   }
-  // }, [energyData]);
-
-  // const energyDataByYearAndMonth: EnergyDataByYearAndMonth = {};
-
   const energyDataByYear: ProjectEnergyDataByYear[] = [];
 
   energyData.forEach((dataset) => {
@@ -98,6 +86,8 @@ export function BarChartMonthly({ energyData }: BarChartMonthlyProps) {
       energyDataByYear.flatMap((data) => data.data.map((dp) => dp.year)),
     ),
   ];
+
+  console.log(years, 'years outside');
 
   const handleYearSelect = (year: number) => {
     setSelectedYear(year);
@@ -167,21 +157,57 @@ function getChartData(
     'December',
   ];
 
-  const selectedYearData = energyDataByYear.map((dataset) => {
-    console.log(dataset, 'dataset');
+  console.log(energyDataByYear, 'energyDataByYear');
 
-    const dataForYear = dataset.data.find((dp) => dp.year === selectedYear);
-    const values = dataForYear ? dataForYear.values : Array(12).fill(0);
+  // const selectedYearData = energyDataByYear.map((dataset) => {
+  //   console.log(dataset, 'dataset');
 
-    return {
-      label: dataset.label,
-      data: values,
-      backgroundColor: dataset.color,
-    };
+  //   const dataForYear = dataset.data.find((dp) => dp.year === selectedYear);
+
+  //   console.log(dataForYear, 'dataForYear');
+  //   const values = dataForYear ? dataForYear.values : Array(12).fill(0);
+
+  //   console.log(values, 'values');
+
+  //   return {
+  //     label: dataset.label,
+  //     data: values,
+  //     backgroundColor: dataset.color,
+  //   };
+  // });
+
+  // return {
+  //   labels: monthNames,
+  //   datasets: selectedYearData,
+  // };
+
+  const datasets: any[] = [];
+
+  energyDataByYear.forEach((category) => {
+    const { label, color, data } = category;
+
+    const categoryValues: number[] = [];
+
+    data.forEach((dataPoint) => {
+      if (dataPoint.year === selectedYear) {
+        const monthIndex = dataPoint.month - 1;
+
+        categoryValues[monthIndex] = dataPoint.values.reduce(
+          (acc, val) => acc + val,
+          0,
+        );
+      }
+    });
+
+    datasets.push({
+      label,
+      backgroundColor: color,
+      data: categoryValues,
+    });
   });
 
   return {
     labels: monthNames,
-    datasets: selectedYearData,
+    datasets,
   };
 }
