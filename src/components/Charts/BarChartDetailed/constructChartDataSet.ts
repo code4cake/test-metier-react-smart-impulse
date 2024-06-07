@@ -5,7 +5,7 @@ interface CreateDataSet {
   uniqueTimestamps: number[];
 }
 
-export function aggregateChartData({
+export function constructChartDataSet({
   dataset,
   uniqueTimestamps,
 }: CreateDataSet) {

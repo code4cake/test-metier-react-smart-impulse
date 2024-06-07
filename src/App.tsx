@@ -10,7 +10,7 @@ import { useProjects, useEnergyData } from '@/api/useProjects';
 import type { Project } from '@/types/Project';
 import { Card } from '@/components/ui/card';
 import { createTimestampValueSet } from '@/utils/createTimestampValueSet';
-import { useIsMobile } from '@/hooks/useIsMobile';
+
 import { SkeletonSelect } from './components/Skeletons/SkeletonSelect';
 
 const App = () => {
@@ -33,14 +33,9 @@ const App = () => {
     isError: energyDataError,
   } = useEnergyData(selectedProject ?? projectUuid);
 
-  console.log('rawEnergyData', rawEnergyData);
-
   const projectEnergyData = rawEnergyData
     ? createTimestampValueSet(rawEnergyData)
     : [];
-
-  const isMobile = useIsMobile();
-  console.log('isMobile', isMobile);
 
   return (
     <main className="grid gap-2 px-3 py-10 text-2xl lg:px-10">
@@ -81,8 +76,8 @@ const App = () => {
         </article>
       </section>
 
-      <section className="grid gap-4 md:flex">
-        <article className="grid gap-4 pb-6">
+      <section className="grid gap-4 md:flex lg:flex lg:justify-between">
+        <article className="grid gap-2">
           <EnergyCard
             title="Energy consumption total"
             iconName="electricity"
@@ -99,7 +94,7 @@ const App = () => {
           />
         </article>
 
-        <article className="grid gap-3 border-t border-slate-200 pt-4">
+        <article className="grid gap-2 border-t border-slate-200 pt-4">
           <h1 className="text-4xl leading-tight">Lower your emissions</h1>
           <ul className="grid gap-3">
             <EnergyEducation

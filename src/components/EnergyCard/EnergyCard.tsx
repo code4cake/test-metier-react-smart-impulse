@@ -25,7 +25,7 @@ export function EnergyCard({
   energyPercentageLabel,
 }: EnergyCardProps) {
   return (
-    <Card className="max-w-screen-sm md:max-w-fit">
+    <Card className="max-w-screen-sm">
       <CardHeader>
         <CardTitle className="flex content-between items-center">
           {iconName == 'electricity' ? (
@@ -33,7 +33,7 @@ export function EnergyCard({
           ) : (
             <MdOutlineGasMeter className="text-blue-500" />
           )}
-          <h1 className="text-xl">{title}</h1>
+          <p className="text-xl">{title}</p>
         </CardTitle>
       </CardHeader>
       <CardContent className="flex place-content-around items-center">

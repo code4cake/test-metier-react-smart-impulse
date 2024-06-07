@@ -10,13 +10,11 @@ import {
   Legend,
 } from 'chart.js';
 
-import type {
-  ProjectEnergyData,
-  ProjectEnergyDataByYear,
-} from '@/types/Project';
+import type { ProjectEnergyData } from '@/types/Project';
 import { YearSelect } from '@/components/Charts/componets/YearSelect';
 import { createChartOptions } from '@/components/Charts/utils/createChartOptions';
 import { aggregateChartDataByMonth } from './aggregateChartDataByMonth';
+import { constructEnergyDataByYear } from './constructChartDataSetByYear';
 
 ChartJS.register(
   CategoryScale,
@@ -31,49 +29,10 @@ interface BarChartMonthlyProps {
   energyData: ProjectEnergyData[];
 }
 
-export interface EnergyDataPoint {
-  year: number;
-  month: number;
-  values: number[];
-}
-
 export function BarChartMonthly({ energyData }: BarChartMonthlyProps) {
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
 
-  const energyDataByYear: ProjectEnergyDataByYear[] = [];
-
-  energyData.forEach((dataset) => {
-    const transformedDataPoints: EnergyDataPoint[] = [];
-
-    dataset.data.forEach((dataPoint) => {
-      const date = new Date(dataPoint.timestamp);
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-
-      const existingDataPoint = transformedDataPoints.find(
-        (dp) => dp.year === year && dp.month === month,
-      );
-
-      if (existingDataPoint) {
-        existingDataPoint.values.push(dataPoint.value);
-      } else {
-        transformedDataPoints.push({
-          year,
-          month,
-          values: [dataPoint.value],
-        });
-      }
-    });
-
-    energyDataByYear.push({
-      label: dataset.label,
-      type: dataset.type,
-      color: dataset.color,
-      data: transformedDataPoints,
-    });
-
-    return energyDataByYear;
-  });
+  const energyDataByYear = constructEnergyDataByYear({ energyData });
 
   const years = [
     ...new Set(
@@ -86,6 +45,7 @@ export function BarChartMonthly({ energyData }: BarChartMonthlyProps) {
   };
 
   const options = createChartOptions();
+
   const chartDataByMonth = aggregateChartDataByMonth(
     energyDataByYear,
     selectedYear,
