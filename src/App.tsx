@@ -4,18 +4,14 @@ import { EnergyEducation } from '@/components/EnergyEducation/EnergyEducation';
 import { BarChartDetailed } from '@/components/Charts/BarChartDetailed/BarChartDetailed';
 import { BarChartMonthly } from '@/components/Charts/BarChartMonthly/BarChartMonthly';
 import { EnergyCard } from '@/components/EnergyCard/EnergyCard';
+import { ProjectSelect } from '@/components/Projects/ProjectSelect';
+import { SkeletonCard } from '@/components/Skeletons/SkeletonCard';
 import { useProjects, useEnergyData } from '@/api/useProjects';
 import type { Project } from '@/types/Project';
 import { Card } from '@/components/ui/card';
-import {
-  Select,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from '@/components/ui/select';
 import { createTimestampValueSet } from '@/utils/createTimestampValueSet';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { SkeletonSelect } from './components/Skeletons/SkeletonSelect';
 
 const App = () => {
   const [selectedProject, setSelectedProject] = useState<
@@ -30,6 +26,7 @@ const App = () => {
   } = useProjects();
 
   const projectUuid = projects && projects.length > 0 ? projects[0].uuid : null;
+
   const {
     data: rawEnergyData,
     isLoading: energyDataLoading,
@@ -42,9 +39,6 @@ const App = () => {
     ? createTimestampValueSet(rawEnergyData)
     : [];
 
-  // console.log('projects', projects);
-  console.log('projectEnergyData', projectEnergyData);
-
   const isMobile = useIsMobile();
   console.log('isMobile', isMobile);
 
@@ -52,31 +46,25 @@ const App = () => {
     <main className="grid gap-2 px-3 py-10 text-2xl lg:px-10">
       {projectsIsError && <p>Error: {error.message}</p>}
 
-      {projectsArePending && <p>Loading...</p>}
-
-      <h1 className="text-4xl">Your footprint</h1>
+      <h1 className="text-4xl">Your Footprint</h1>
 
       <section className="grid gap-4 py-2">
-        <Select
-          value={selectedProject ?? ''}
-          onValueChange={(value) => setSelectedProject(value)}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder={selectedProject ?? 'Choose a project'} />
-          </SelectTrigger>
-          <SelectContent>
-            {projects?.map((project: Project) => (
-              <SelectItem key={project.uuid} value={project.uuid}>
-                {project.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {projectsArePending ? (
+          <SkeletonSelect />
+        ) : (
+          <ProjectSelect
+            value={selectedProject ?? ''}
+            onValueChange={(value) => setSelectedProject(value)}
+            projects={projects}
+            placeholder={selectedProject ?? 'Choose a project'}
+          />
+        )}
 
-        {energyDataLoading && <p>Loading energy data...</p>}
+        {energyDataLoading && <SkeletonCard text="Loading energy graph" />}
+
         {energyDataError && <p>Error loading energy data</p>}
 
-        <article className="">
+        <article>
           {projectEnergyData.length > 0 && (
             <Card className="p-4">
               <BarChartDetailed energyData={projectEnergyData} />
@@ -84,7 +72,7 @@ const App = () => {
           )}
         </article>
 
-        <article className="">
+        <article>
           {projectEnergyData.length > 0 && (
             <Card className="p-4">
               <BarChartMonthly energyData={projectEnergyData} />

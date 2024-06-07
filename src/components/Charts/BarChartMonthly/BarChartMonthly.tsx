@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { Bar } from 'react-chartjs-2';
 import {
-  // type ChartData,
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
@@ -25,7 +24,7 @@ import type {
   ProjectEnergyData,
   ProjectEnergyDataByYear,
 } from '@/types/Project';
-// import { createChartOptions } from '../utils/createChartOptions';
+import { createChartOptions } from '../utils/createChartOptions';
 
 interface BarChartMonthlyProps {
   energyData: ProjectEnergyData[];
@@ -75,25 +74,18 @@ export function BarChartMonthly({ energyData }: BarChartMonthlyProps) {
     return energyDataByYear;
   });
 
-  console.log(energyDataByYear, 'energyDataByYear');
-
-  // console.log(energyDataByYearAndMonth);
-
-  // console.log(energyDataByYearAndMonth, 'energyDataByYearAndMonth');
-
   const years = [
     ...new Set(
       energyDataByYear.flatMap((data) => data.data.map((dp) => dp.year)),
     ),
   ];
 
-  console.log(years, 'years outside');
-
   const handleYearSelect = (year: number) => {
     setSelectedYear(year);
   };
 
-  // const options = createChartOptions();
+  const options = createChartOptions();
+
   return (
     <div>
       <select
@@ -111,25 +103,7 @@ export function BarChartMonthly({ energyData }: BarChartMonthlyProps) {
       <div style={{ minHeight: '500px' }}>
         <Bar
           data={getChartData(energyDataByYear, selectedYear)}
-          options={{
-            scales: {
-              x: { stacked: true },
-              y: {
-                stacked: true,
-                ticks: {
-                  callback: (value) => `${value} MkWh`,
-                },
-              },
-            },
-            plugins: {
-              legend: { position: 'top' },
-              title: {
-                display: true,
-                text: 'Monthly Energy Consumption',
-              },
-            },
-          }}
-          // options={options}
+          options={options}
         />
       </div>
     </div>
@@ -158,28 +132,6 @@ function getChartData(
   ];
 
   console.log(energyDataByYear, 'energyDataByYear');
-
-  // const selectedYearData = energyDataByYear.map((dataset) => {
-  //   console.log(dataset, 'dataset');
-
-  //   const dataForYear = dataset.data.find((dp) => dp.year === selectedYear);
-
-  //   console.log(dataForYear, 'dataForYear');
-  //   const values = dataForYear ? dataForYear.values : Array(12).fill(0);
-
-  //   console.log(values, 'values');
-
-  //   return {
-  //     label: dataset.label,
-  //     data: values,
-  //     backgroundColor: dataset.color,
-  //   };
-  // });
-
-  // return {
-  //   labels: monthNames,
-  //   datasets: selectedYearData,
-  // };
 
   const datasets: any[] = [];
 

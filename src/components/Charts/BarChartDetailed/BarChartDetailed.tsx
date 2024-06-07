@@ -29,8 +29,6 @@ ChartJS.register(
 );
 
 export const BarChartDetailed = ({ energyData }: BarChartDetailed) => {
-  // console.log('energyData detailed', energyData);
-
   const uniqueTimestamps = Array.from(
     new Set(
       energyData.flatMap((dataset) =>
@@ -40,8 +38,6 @@ export const BarChartDetailed = ({ energyData }: BarChartDetailed) => {
   ).sort();
 
   const labels = uniqueTimestamps.map((timestamp) => {
-    // console.log('timestamp', timestamp);
-
     return format(new Date(timestamp), 'EEE, MMM d, yyy, HH:mm');
   });
 
